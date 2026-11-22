@@ -9,15 +9,15 @@ import MemoryPanel from './ui/MemoryPanel'
 
 export default function App() {
   const gallery = useRef(null)
-  const layout = useMemo(buildSlots, [])            // memoized: the gallery is rebuilt whenever `slots` changes identity
-  const [idx, setIdx] = useState(0)                 // station the camera is at
-  const [focus, setFocus] = useState(null)          // memory the camera is standing in front of
-  const devView = import.meta.env.DEV ? new URLSearchParams(location.search).get("view") : null   // dev-only: ?view=timeline|panel for screenshots
-  const [panel, setPanel] = useState(() => (devView === "panel" ? layout.slots.find((s) => s.type === "item").item : null))   // memory shown in the story panel
+  const layout = useMemo(buildSlots, [])
+  const [idx, setIdx] = useState(0)
+  const [focus, setFocus] = useState(null)
+  const devView = import.meta.env.DEV ? new URLSearchParams(location.search).get("view") : null
+  const [panel, setPanel] = useState(() => (devView === "panel" ? layout.slots.find((s) => s.type === "item").item : null))
   const [listOpen, setListOpen] = useState(devView === "timeline")
   const [dark, setDark] = useState(() => {
-    if (import.meta.env.DEV) { const t = new URLSearchParams(location.search).get("theme"); if (t) return t === "dark" }   // dev-only override for screenshots
-    try { const s = localStorage.getItem("gallery-theme"); if (s) return s === "dark" } catch { /* storage unavailable */ }
+    if (import.meta.env.DEV) { const t = new URLSearchParams(location.search).get("theme"); if (t) return t === "dark" }
+    try { const s = localStorage.getItem("gallery-theme"); if (s) return s === "dark" } catch {}
     return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false
   })
 
@@ -26,10 +26,10 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? "dark" : "light"
-    try { localStorage.setItem("gallery-theme", dark ? "dark" : "light") } catch { /* ignore */ }
+    try { localStorage.setItem("gallery-theme", dark ? "dark" : "light") } catch {}
   }, [dark])
 
-  // Esc: close panel -> leave focus -> close timeline
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key !== "Escape") return

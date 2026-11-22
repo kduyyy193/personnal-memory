@@ -1,20 +1,3 @@
-// ─────────────────────────────────────────────────────────────────────────────
-//  YOUR MEMORIES — edit this file by hand, nothing else needs to change.
-//
-//  Each memory:
-//    id     unique string
-//    date   'YYYY-MM-DD'   (the year decides which year-section it lands in;
-//                           memories are sorted by date automatically)
-//    title  short caption written on the polaroid
-//    place  where it happened
-//    note   the story, shown when you open the memory
-//    photo  optional image path, e.g. '/photos/da-lat.jpg'  (put the file in public/photos/)
-//           leave null to get a generated placeholder scene (season follows the month)
-//    seed   any number — changes the look of the placeholder scene
-//
-//  Add / remove / reorder entries freely. The gallery, timeline list and year links
-//  in the top bar are all generated from this array.
-// ─────────────────────────────────────────────────────────────────────────────
 export const SAMPLE_MEMORIES = [
   { id: "m-2022-02", date: "2022-02-01", seed: 11, photo: null,
     title: "Tết ở nhà ngoại", place: "Cần Thơ",

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { longDate } from '../data/layout'
 import { skin } from '../three/skin'
 
-// Full-screen story view for one memory. A trip with several photos gets a thumbnail strip under the big photo.
 export default function MemoryPanel({ item, onClose }) {
   const photos = item.photos && item.photos.length ? item.photos : [skin.photoSrc(item)]
   const [i, setI] = useState(0)

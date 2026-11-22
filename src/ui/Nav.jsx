@@ -1,5 +1,5 @@
 function ThemeIcon({ dark }) {
-  // shows the mode you will switch TO: sun while dark, moon while light
+
   return dark ? (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
       <circle cx="12" cy="12" r="4" />
@@ -12,7 +12,6 @@ function ThemeIcon({ dark }) {
   )
 }
 
-// Header holds only the Gallery/Timeline toggle and the theme button (no logo, Home or year links).
 export default function Nav({ listOpen, onList, dark, onTheme }) {
   return (
     <nav>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-// Current year (fades on change), station counter and the control hint. group=null means past the last memory.
+
 export default function Hud({ idx, group, hidden }) {
   const key = group ? (group.year ?? group.name) : "end"
   const [shown, setShown] = useState({ key, group })

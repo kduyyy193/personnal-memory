@@ -1,5 +1,3 @@
-// Infinite path: the heading is a smooth function of distance s; position is its running integral.
-// Heading stays within about ±0.92 rad, so the path always progresses forward and never self-intersects.
 const DS = 0.25
 const PX = [0]
 const PZ = [0]
@@ -17,7 +15,6 @@ function ensurePath(s) {
   }
 }
 
-// position (x,z), tangent (tx,tz) and "right" vector (rx,rz) at distance s
 export function frame(s) {
   let px, pz
   if (s < 0) { px = 0; pz = -s }

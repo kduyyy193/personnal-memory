@@ -1,7 +1,6 @@
 import { longDate } from '../data/layout'
 import { skin } from '../three/skin'
 
-// Vertical timeline of every memory, grouped by year.
 export default function Timeline({ layout, onPick }) {
   return (
     <div id="list">

@@ -1,7 +1,6 @@
 import { shortDate } from '../data/layout'
 
-// How things are painted onto canvases for this project: polaroid memories + big-numeral year cards.
-const HAND = "'Playpen Sans', 'Segoe Print', cursive"   // handwritten captions (has Vietnamese; loaded in main.jsx)
+const HAND = "'Playpen Sans', 'Segoe Print', cursive"
 const W = 520, H = 650
 
 function rng(seed) {
@@ -20,7 +19,6 @@ function seasonOf(date) {
   return m >= 3 && m <= 5 ? SEASONS.spring : m >= 6 && m <= 8 ? SEASONS.summer : m >= 9 && m <= 11 ? SEASONS.autumn : SEASONS.winter
 }
 
-// Placeholder "photo": flat sky / sun / hills scene, deterministic per memory, season follows the month.
 function drawScene(g, x, y, w, h, item) {
   const R = rng(item.seed * 977 + 5), S = seasonOf(item.date)
   g.save(); g.beginPath(); g.rect(x, y, w, h); g.clip()
@@ -39,7 +37,7 @@ function drawScene(g, x, y, w, h, item) {
     for (let px = 0; px <= w; px += 8) g.lineTo(x + px, base + Math.sin(px / w * fr * 3.14 + ph) * amp)
     g.lineTo(x + w, y + h); g.closePath(); g.fill()
   }
-  // a little house or tree on the front hill
+
   const hx = x + w * (0.15 + R() * 0.65), hy = y + h * 0.84
   if (R() > 0.5) {
     g.fillStyle = "#f4ead7"; g.fillRect(hx, hy - 26, 34, 26)
@@ -61,7 +59,7 @@ function fitFont(g, text, maxW, size, family, weight = "") {
   while (size > 14) { g.font = `${weight} ${size}px ${family}`; if (g.measureText(text).width <= maxW) break; size -= 1 }
 }
 
-const imgCache = new Map()   // path -> {img, ready}
+const imgCache = new Map()
 function loadPhoto(src, cb) {
   let e = imgCache.get(src)
   if (!e) {
@@ -88,7 +86,7 @@ function paintPolaroid(g, item, photo) {
 }
 
 export const skin = {
-  labels: false,   // caption is baked into the polaroid
+  labels: false,
 
   drawItem(item, onChange) {
     const c = document.createElement("canvas"); c.width = W; c.height = H
@@ -101,12 +99,12 @@ export const skin = {
   drawCard(group, dark) {
     const c = document.createElement("canvas"); c.width = W; c.height = H
     const g = c.getContext("2d")
-    if (group.cover) {   // year card with a representative photo: full-bleed, year + count on a soft shade at the top (keeps the subject clear)
+    if (group.cover) {
       const HERO = group.collage && group.collage.length ? 430 : H, GAP = 6
       g.fillStyle = dark ? "#171a2b" : "#ebe7dd"; g.fillRect(0, 0, W, H)
       const e = imgCache.get(group.cover)
       if (e && e.ready) drawCover(g, e.img, 0, 0, W, HERO, 0.7)
-      if (HERO < H) {   // the row of small photos (other memories of the year)
+      if (HERO < H) {
         const n = group.collage.length, tw = (W - GAP * (n - 1)) / n, ty = HERO + GAP, th = H - ty
         group.collage.forEach((src, i) => {
           const t = imgCache.get(src), tx = i * (tw + GAP)
@@ -133,14 +131,12 @@ export const skin = {
     return c
   },
 
-  drawLabel() { return document.createElement("canvas") },   // unused (labels:false)
+  drawLabel() { return document.createElement("canvas") },
 
-  // load photos into the cache before the gallery is built (cards are drawn synchronously); never waits more than 4 s
   preload(srcs) {
     return Promise.all(srcs.filter(Boolean).map((s) => new Promise((res) => { loadPhoto(s, () => res()); setTimeout(res, 4000) })))
   },
 
-  // image for the detail panel / timeline thumbnails: real photo path, or a rendered placeholder scene
   photoSrc(item) {
     if (item.photo) return item.photo
     if (!item._src) {

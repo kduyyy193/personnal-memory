@@ -1,6 +1,5 @@
 import { shortDate } from '../data/layout'
 
-// Shown while the camera is standing in front of one memory.
 export default function FocusBar({ item, onOpen, onBack }) {
   return (
     <div id="focus" className={"cond" + (item ? " show" : "")}>

@@ -1,7 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { createGallery } from '../three/Gallery'
 
-// Owns the <canvas> and the imperative 3D gallery. React only talks to it through the ref API + callbacks.
 const GalleryCanvas = forwardRef(function GalleryCanvas({ onFocus, onOpen, onHud, blocked, dark, slots }, ref) {
   const canvasRef = useRef(null)
   const galleryRef = useRef(null)
@@ -15,7 +14,7 @@ const GalleryCanvas = forwardRef(function GalleryCanvas({ onFocus, onOpen, onHud
       onHud: (i) => latest.current.onHud(i),
     }, { dark: latest.current.dark, slots })
     galleryRef.current = g
-    if (import.meta.env.DEV) {   // dev-only: ?look=yaw,pitch to start with the view turned (handy for screenshots)
+    if (import.meta.env.DEV) {
       const q = new URLSearchParams(location.search).get("look")
       if (q) { const [y, p] = q.split(",").map(Number); g.look(y || 0, p || 0) }
     }

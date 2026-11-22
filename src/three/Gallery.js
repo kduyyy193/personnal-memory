@@ -8,22 +8,19 @@ function tex(canvas) {
   return t
 }
 
-// Keep the same colour behaviour as the original single-file build (no sRGB conversion).
+
 THREE.ColorManagement.enabled = false
 
 const BG = 0xf2f2f2
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const smooth = (x) => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x) }
 
-// Layout constants
-const W = 4.4, H = 8, CH = 40, STEP = 0.4            // corridor half-width, wall height, chunk length, sample step
+
+const W = 4.4, H = 8, CH = 40, STEP = 0.4
 const SP = 8.5, S0 = 7, PW = 2.7, PH = 3.375, PY = 3.2, FOCUS_D = 5.0
 const LOOK = 5, CAM_Y = 3.2
 
-/**
- * Creates the whole 3D gallery on a canvas and returns a small imperative API for React.
- * handlers: { onFocus(item|null), onOpen(item), onHud(stationIndex) }
- */
+
 export function createGallery(canvas, handlers, opts = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
   renderer.outputColorSpace = THREE.LinearSRGBColorSpace
@@ -32,14 +29,14 @@ export function createGallery(canvas, handlers, opts = {}) {
   scene.background = new THREE.Color(BG)
   scene.fog = new THREE.Fog(BG, 16, 68)
   const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200)
-  const slots = opts.slots || []   // slot j -> station floor(j/2), left side for even j, right side for odd j
+  const slots = opts.slots || []
 
-  /* ---------- theme (0 = light, 1 = dark) ---------- */
+
   const LIGHT = { bg: new THREE.Color(BG), corr: new THREE.Color(1, 1, 1), blank: new THREE.Color(0xffffff) }
   const DARK = { bg: new THREE.Color(0x0a0c16), corr: new THREE.Color(0.115, 0.125, 0.18), blank: new THREE.Color(0x22253a) }
   let themeT = opts.dark ? 1 : 0, themeTarget = themeT, texDark = themeT > 0.5
 
-  /* ---------- starry sky (only visible in dark mode, follows the camera) ---------- */
+
   const sky = new THREE.Group()
   const domeMat = new THREE.ShaderMaterial({
     side: THREE.BackSide, transparent: true, depthWrite: false, fog: false,
@@ -52,8 +49,8 @@ export function createGallery(canvas, handlers, opts = {}) {
         vec3 col = mix(vec3(0.045,0.055,0.12), vec3(0.008,0.012,0.04), pow(h, 0.55));
         vec3 moonDir = normalize(vec3(-0.32, 0.5, -0.8));
         float d = dot(normalize(vDir), moonDir);
-        col += vec3(0.95,0.96,1.0) * smoothstep(0.9984, 0.9990, d);          // moon disc
-        col += vec3(0.45,0.5,0.75) * pow(max(d, 0.0), 160.0) * 0.4;          // glow
+        col += vec3(0.95,0.96,1.0) * smoothstep(0.9984, 0.9990, d);
+        col += vec3(0.45,0.5,0.75) * pow(max(d, 0.0), 160.0) * 0.4;
         gl_FragColor = vec4(col, uOpacity);
       }`,
   })
@@ -95,7 +92,7 @@ export function createGallery(canvas, handlers, opts = {}) {
   stars.renderOrder = -2; stars.frustumCulled = false
   sky.add(dome, stars); sky.visible = false; scene.add(sky)
 
-  /* ---------- corridor chunks (streamed) ---------- */
+
   const prof = []
   {
     const Rc = 1.5
@@ -130,7 +127,7 @@ export function createGallery(canvas, handlers, opts = {}) {
     scene.add(m); chunks.set(c, m)
   }
 
-  /* ---------- stations (streamed) ---------- */
+
   const PG = new THREE.PlaneGeometry(PW, PH)
   const LG = new THREE.PlaneGeometry(PW, PW * 110 / 520)
   const SG = new THREE.PlaneGeometry(PW + .18, PH + .18)
@@ -142,19 +139,19 @@ export function createGallery(canvas, handlers, opts = {}) {
   let hit = []
 
   function createStation(i) {
-    const S = { groups: [], meshes: [], disp: [], themed: [] }   // themed: materials whose canvas texture depends on light/dark
+    const S = { groups: [], meshes: [], disp: [], themed: [] }
     for (let side = -1; side <= 1; side += 2) {
       const fr = frame(S0 + i * SP + (side > 0 ? 2.2 : 0)), g = new THREE.Group()
-      const slot = slots[i * 2 + (side > 0 ? 1 : 0)]     // data-driven: a title card, an item, or nothing yet
+      const slot = slots[i * 2 + (side > 0 ? 1 : 0)]
       let it = null, mat
       const blank = !slot
-      if (blank) mat = whiteMat                         // nothing here yet: plain white frame
+      if (blank) mat = whiteMat
       else {
         let map, make = null
         if (slot.type === "card") { make = (d) => skin.drawCard(slot.group, d); map = tex(make(texDark)) }
         else {
           it = slot.item
-          map = tex(skin.drawItem(it, () => { if (map) map.needsUpdate = true }))   // may redraw later (async image load)
+          map = tex(skin.drawItem(it, () => { if (map) map.needsUpdate = true }))
         }
         mat = new THREE.MeshBasicMaterial({ map }); S.disp.push(mat)
         if (make) S.themed.push({ mat, make }); else S.disp.push(map)
@@ -173,7 +170,7 @@ export function createGallery(canvas, handlers, opts = {}) {
       const sh = new THREE.Mesh(SG, blank ? blankShadowMat : shadowMat); sh.position.set(0, -.05, -.02); g.add(sh)
       const ox = fr.x + fr.rx * side * (W - 0.04), oz = fr.z + fr.rz * side * (W - 0.04)
       g.position.set(ox, PY, oz); g.lookAt(fr.x, PY, fr.z); scene.add(g); S.groups.push(g); mesh.userData.group = g
-      if (it) { // camera pose for the "step up to the painting" view
+      if (it) {
         let nx = fr.x - ox, nz = fr.z - oz; const nl = Math.hypot(nx, nz); nx /= nl; nz /= nl
         const fp = new THREE.Vector3(ox + nx * FOCUS_D, PY, oz + nz * FOCUS_D)
         tmpCam.position.copy(fp); tmpCam.lookAt(ox, PY - 0.55, oz)
@@ -190,7 +187,7 @@ export function createGallery(canvas, handlers, opts = {}) {
     stations.delete(i)
   }
 
-  // swap the text/card canvases to the current theme (called when the transition passes its midpoint)
+
   function retheme(S) {
     S.themed.forEach((t) => {
       const old = t.mat.map
@@ -217,7 +214,7 @@ export function createGallery(canvas, handlers, opts = {}) {
 
   function rebuildHit() { hit = []; stations.forEach((S) => S.meshes.forEach((m) => hit.push(m))) }
 
-  /* ---------- state ---------- */
+
   let cur = 0, tgt = 0, focus = null
   let yaw = 0, pitch = 0, yawT = 0, pitchT = 0
   let mx = 0, my = 0, smx = 0, smy = 0
@@ -249,7 +246,7 @@ export function createGallery(canvas, handlers, opts = {}) {
     if (changed) rebuildHit()
   }
 
-  /* ---------- focus ---------- */
+
   function setFocus(m) {
     if (focus && focus.userData.label) focus.userData.label.visible = true
     focus = m
@@ -258,7 +255,7 @@ export function createGallery(canvas, handlers, opts = {}) {
     handlers.onFocus(m ? m.userData.item : null)
   }
 
-  /* ---------- input ---------- */
+
   const ray = new THREE.Raycaster(), mv = new THREE.Vector2()
   function pick(x, y) {
     mv.set(x / innerWidth * 2 - 1, -(y / innerHeight) * 2 + 1)
@@ -272,7 +269,7 @@ export function createGallery(canvas, handlers, opts = {}) {
     e.preventDefault(); if (blocked) return
     if (focus) setFocus(null)
     setT(tgt + e.deltaY * 0.05)
-    const k = Math.max(0, 1 - Math.abs(e.deltaY) * 0.0035); yawT *= k; pitchT *= k   // walking re-centres the view
+    const k = Math.max(0, 1 - Math.abs(e.deltaY) * 0.0035); yawT *= k; pitchT *= k
   }
   const onDown = (e) => {
     dragging = true; moved = 0; lastX = e.clientX; lastY = downY = e.clientY
@@ -284,8 +281,8 @@ export function createGallery(canvas, handlers, opts = {}) {
       const dx = e.clientX - lastX, dy = e.clientY - lastY
       lastX = e.clientX; lastY = e.clientY; moved += Math.abs(dx) + Math.abs(dy)
       if (focus) { if (moved > 8) setFocus(null) }
-      else if (e.pointerType === "touch") { yawT = clamp(yawT - dx * 0.0035, -1.9, 1.9); setT(tgt - dy * 0.12) }   // touch: swipe sideways = look, swipe up = walk forward, down = back
-      else { yawT = clamp(yawT - dx * 0.0035, -1.9, 1.9); pitchT = clamp(pitchT + dy * 0.003, -0.55, 0.95) }   // up to ~55° so the sky is reachable   // up to ~55° so the sky is reachable
+      else if (e.pointerType === "touch") { yawT = clamp(yawT - dx * 0.0035, -1.9, 1.9); setT(tgt - dy * 0.12) }
+      else { yawT = clamp(yawT - dx * 0.0035, -1.9, 1.9); pitchT = clamp(pitchT + dy * 0.003, -0.55, 0.95) }
     }
     hover(e.clientX, e.clientY)
   }
@@ -310,7 +307,7 @@ export function createGallery(canvas, handlers, opts = {}) {
   const onResize = () => {
     renderer.setSize(innerWidth, innerHeight, false)
     camera.aspect = innerWidth / innerHeight
-    camera.fov = camera.aspect < 1 ? 52 + (1 - camera.aspect) * 38 : 52   // portrait phones: widen the view so the corridor isn't cropped
+    camera.fov = camera.aspect < 1 ? 52 + (1 - camera.aspect) * 38 : 52
     camera.updateProjectionMatrix()
   }
   canvas.addEventListener("wheel", onWheel, { passive: false })
@@ -321,7 +318,7 @@ export function createGallery(canvas, handlers, opts = {}) {
   window.addEventListener("resize", onResize)
   onResize()
 
-  /* ---------- public API ---------- */
+
   function step(d) {
     if (focus) setFocus(null)
     yawT = 0; pitchT = 0
@@ -331,7 +328,7 @@ export function createGallery(canvas, handlers, opts = {}) {
   function goStation(i) { if (focus) setFocus(null); yawT = 0; pitchT = 0; setT(stationS(i)) }
   function goHome() { if (focus) setFocus(null); yawT = 0; pitchT = 0; setT(0) }
 
-  /* ---------- camera + loop ---------- */
+
   const cp = new THREE.Vector3(), cq = new THREE.Quaternion()
   const Pd = new THREE.Vector3(), Qd = new THREE.Quaternion(), eul = new THREE.Euler(0, 0, 0, "YXZ")
 
@@ -349,7 +346,7 @@ export function createGallery(canvas, handlers, opts = {}) {
   function loop(now) {
     if (disposed) return
     const dt = Math.min(0.05, Math.max(0.001, (now - last) / 1000)); last = now
-    if (Math.abs(tgt - cur) > 150) cur = tgt - Math.sign(tgt - cur) * 150     // long jumps: don't stream hundreds of metres
+    if (Math.abs(tgt - cur) > 150) cur = tgt - Math.sign(tgt - cur) * 150
     const prev = cur; cur += (tgt - cur) * (1 - Math.exp(-dt * 4.2)); const vel = (cur - prev) / dt
     yaw += (yawT - yaw) * (1 - Math.exp(-dt * 9)); pitch += (pitchT - pitch) * (1 - Math.exp(-dt * 9))
     smx += (mx - smx) * (1 - Math.exp(-dt * 3.5)); smy += (my - smy) * (1 - Math.exp(-dt * 3.5))
