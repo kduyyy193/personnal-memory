@@ -1,0 +1,57 @@
+// ─────────────────────────────────────────────────────────────────────────────
+//  YOUR MEMORIES — edit this file by hand, nothing else needs to change.
+//
+//  Each memory:
+//    id     unique string
+//    date   'YYYY-MM-DD'   (the year decides which year-section it lands in;
+//                           memories are sorted by date automatically)
+//    title  short caption written on the polaroid
+//    place  where it happened
+//    note   the story, shown when you open the memory
+//    photo  optional image path, e.g. '/photos/da-lat.jpg'  (put the file in public/photos/)
+//           leave null to get a generated placeholder scene (season follows the month)
+//    seed   any number — changes the look of the placeholder scene
+//
+//  Add / remove / reorder entries freely. The gallery, timeline list and year links
+//  in the top bar are all generated from this array.
+// ─────────────────────────────────────────────────────────────────────────────
+export const SAMPLE_MEMORIES = [
+  { id: "m-2022-02", date: "2022-02-01", seed: 11, photo: null,
+    title: "Tết ở nhà ngoại", place: "Cần Thơ",
+    note: "Cả nhà quây quần gói bánh tét từ chiều hai mươi chín. Khói bếp củi, tiếng cười của đám em họ, và mùi lá chuối làm mình nhớ mãi." },
+  { id: "m-2022-05", date: "2022-05-14", seed: 12, photo: null,
+    title: "Chuyến đi biển đầu tiên", place: "Quy Nhơn",
+    note: "Lần đầu cả nhóm đi chung một chuyến dài ngày. Dậy 5 giờ sáng để đón bình minh, ăn bánh xèo hải sản rồi ngủ quên trên bãi cát." },
+  { id: "m-2022-08", date: "2022-08-20", seed: 13, photo: null,
+    title: "Mưa rào cuối hè", place: "Sài Gòn",
+    note: "Kẹt xe giữa trời mưa, ghé quán cà phê nhỏ trú tạm. Ngồi nói chuyện đến tận khuya mà chẳng ai muốn về." },
+  { id: "m-2022-12", date: "2022-12-24", seed: 14, photo: null,
+    title: "Noel đầu tiên ở nhà mới", place: "Thủ Đức",
+    note: "Căn phòng còn trống nhưng cây thông nhỏ đã sáng đèn. Nấu mì Ý dở tệ mà ăn hết sạch." },
+
+  { id: "m-2023-03", date: "2023-03-12", seed: 21, photo: null,
+    title: "Săn mây trên đồi", place: "Đà Lạt",
+    note: "Leo dốc từ lúc trời còn tối để kịp biển mây. Lạnh run nhưng khi mặt trời lên thì ai cũng im lặng nhìn." },
+  { id: "m-2023-06", date: "2023-06-03", seed: 22, photo: null,
+    title: "Sinh nhật bất ngờ", place: "Nhà bạn Minh",
+    note: "Mọi người giấu bánh kem suốt cả buổi chiều. Tắt đèn, hát to, và mình quên cả điều ước." },
+  { id: "m-2023-10", date: "2023-10-08", seed: 23, photo: null,
+    title: "Lá vàng đầu thu", place: "Hà Nội",
+    note: "Đi bộ quanh hồ, mua cốm và hồng. Mùa thu ở đây chậm và thơm hơn mình tưởng." },
+
+  { id: "m-2024-01", date: "2024-01-28", seed: 31, photo: null,
+    title: "Chuyến tàu đêm", place: "Đà Nẵng – Huế",
+    note: "Ngồi sát cửa sổ nhìn biển tối lướt qua. Đọc hết một cuốn sách chỉ trong một đêm." },
+  { id: "m-2024-04", date: "2024-04-21", seed: 32, photo: null,
+    title: "Hoa phượng nở sớm", place: "Trường cũ",
+    note: "Quay lại sân trường sau tám năm. Cái ghế đá vẫn còn đó, chỉ có mình là đã khác." },
+  { id: "m-2024-07", date: "2024-07-15", seed: 33, photo: null,
+    title: "Cắm trại bên suối", place: "Bảo Lộc",
+    note: "Nướng bắp, đốt lửa, đếm sao cho đến khi buồn ngủ. Một đêm bình yên hiếm có." },
+  { id: "m-2024-09", date: "2024-09-02", seed: 34, photo: null,
+    title: "Ngày dọn về", place: "Căn hộ mới",
+    note: "Thùng giấy chất đầy phòng khách. Bữa tối đầu tiên là mì gói ăn trên sàn nhà, và vẫn là bữa ngon nhất." },
+  { id: "m-2024-12", date: "2024-12-31", seed: 35, photo: null,
+    title: "Đếm ngược", place: "Sân thượng",
+    note: "Pháo hoa xa xa, ly nước ngọt cụng nhau lúc giao thừa. Nhìn lại một năm, mình thấy biết ơn nhiều hơn là tiếc." },
+]
