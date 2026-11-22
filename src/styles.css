@@ -142,3 +142,12 @@ nav{justify-content:flex-end}
   #panel h1{font-size:26px}
   #close{top:10px;right:14px}
 }
+
+html,body{overscroll-behavior:none}
+@media(max-width:760px){
+  nav{padding-top:calc(10px + env(safe-area-inset-top))}
+  #hint{top:calc(58px + env(safe-area-inset-top))}
+  #arrows{bottom:calc(14px + env(safe-area-inset-bottom))}
+  #progress{bottom:calc(28px + env(safe-area-inset-bottom))}
+  #title,#focus{bottom:calc(78px + env(safe-area-inset-bottom))}
+}
