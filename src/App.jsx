@@ -7,6 +7,8 @@ import FocusBar from './ui/FocusBar'
 import Timeline from './ui/Timeline'
 import MemoryPanel from './ui/MemoryPanel'
 
+const isNight = () => { const h = new Date().getHours(); return h >= 18 || h < 6 }
+
 export default function App() {
   const gallery = useRef(null)
   const layout = useMemo(buildSlots, [])
@@ -17,8 +19,7 @@ export default function App() {
   const [listOpen, setListOpen] = useState(devView === "timeline")
   const [dark, setDark] = useState(() => {
     if (import.meta.env.DEV) { const t = new URLSearchParams(location.search).get("theme"); if (t) return t === "dark" }
-    try { const s = localStorage.getItem("gallery-theme"); if (s) return s === "dark" } catch {}
-    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false
+    return isNight()
   })
 
   const blocked = !!panel || listOpen
@@ -26,8 +27,16 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? "dark" : "light"
-    try { localStorage.setItem("gallery-theme", dark ? "dark" : "light") } catch {}
   }, [dark])
+
+  useEffect(() => {
+    let night = isNight()
+    const t = setInterval(() => {
+      const now = isNight()
+      if (now !== night) { night = now; setDark(now) }
+    }, 60000)
+    return () => clearInterval(t)
+  }, [])
 
 
   useEffect(() => {
