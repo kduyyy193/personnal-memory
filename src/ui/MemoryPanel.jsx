@@ -8,7 +8,7 @@ export default function MemoryPanel({ item, onClose }) {
 
   return (
     <>
-      <button id="close" aria-label="close" onClick={onClose}>&times;</button>
+      <button id="close" aria-label="Đóng" onClick={onClose}>&times;</button>
       <div id="panel">
         <div className="wrap">
           <div className="gallery">
@@ -16,7 +16,7 @@ export default function MemoryPanel({ item, onClose }) {
             {photos.length > 1 && (
               <div className="thumbs">
                 {photos.map((src, k) => (
-                  <button key={src} className={k === i ? "on" : ""} aria-label={`Photo ${k + 1}`} onClick={() => setI(k)}>
+                  <button key={src} className={k === i ? "on" : ""} aria-label={`Ảnh ${k + 1}`} onClick={() => setI(k)}>
                     <img src={src} alt="" />
                   </button>
                 ))}
@@ -24,7 +24,7 @@ export default function MemoryPanel({ item, onClose }) {
             )}
           </div>
           <div>
-            <div className="crumb cond">{item.year} · Memory</div>
+            <div className="crumb cond">{item.year} · Kỷ niệm</div>
             <div className="mdate cond">{longDate(item.date)}</div>
             <h1 className="cond">{item.title}</h1>
             {item.place && <h3 className="cond">{item.place}</h3>}

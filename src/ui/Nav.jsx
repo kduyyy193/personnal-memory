@@ -17,10 +17,10 @@ export default function Nav({ listOpen, onList, dark, onTheme }) {
     <nav>
       <div className="r">
         <div className="seg">
-          <button className={listOpen ? "" : "on"} onClick={() => onList(false)}>GALLERY</button>
-          <button className={listOpen ? "on" : ""} onClick={() => onList(true)}>TIMELINE</button>
+          <button className={listOpen ? "" : "on"} onClick={() => onList(false)}>TRIỄN LÃM</button>
+          <button className={listOpen ? "on" : ""} onClick={() => onList(true)}>DÒNG THỜI GIAN</button>
         </div>
-        <button className="theme" aria-label={dark ? "Switch to light mode" : "Switch to dark mode"} title={dark ? "Light mode" : "Dark mode"} onClick={onTheme}>
+        <button className="theme" aria-label={dark ? "Chuyển sang chế độ sáng" : "Chuyển sang chế độ tối"} title={dark ? "Chế độ sáng" : "Chế độ tối"} onClick={onTheme}>
           <ThemeIcon dark={dark} />
         </button>
       </div>

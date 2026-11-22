@@ -35,7 +35,7 @@ function computeSlots() {
     const yearPhotos = items.flatMap((m) => (m.photos?.length ? m.photos : m.photo ? [m.photo] : []))
     const hero = YEAR_COVERS[y] || yearPhotos[0] || null
     const collage = pickRandom(yearPhotos.filter((p) => p !== hero), COLLAGE_MAX)
-    const group = { year: y, name: y, sub: `${items.length} ${items.length === 1 ? "memory" : "memories"}`, count: items.length, cardSlot: slots.length, cover: hero, collage, note: YEAR_NOTES[y] || "" }
+    const group = { year: y, name: y, sub: `${items.length} kỷ niệm`, count: items.length, cardSlot: slots.length, cover: hero, collage, note: YEAR_NOTES[y] || "" }
     groups.push(group)
     slots.push({ type: "card", group })
     for (const m of items) {

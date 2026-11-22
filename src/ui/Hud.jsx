@@ -13,19 +13,19 @@ export default function Hud({ idx, group, hidden }) {
     return () => clearTimeout(t)
   }, [key, group, shown.key])
 
-  const title = shown.group ? shown.group.name : "More memories to come"
-  const sub = shown.group ? shown.group.sub : "Frames waiting to be filled"
+  const title = shown.group ? shown.group.name : "Còn nhiều kỷ niệm đang chờ"
+  const sub = shown.group ? shown.group.sub : "Những khung hình chờ được lấp đầy"
 
   return (
     <>
       <div id="progress" className="cond">{String(idx + 1).padStart(3, "0")}</div>
       <div id="title" className={"cond" + (hidden ? " hide" : "")}>
-        <div className="k">THE YEAR</div>
+        <div className="k">NĂM</div>
         <div className="t" style={{ opacity: fade ? 0 : 1 }}>{title}</div>
         <div className="s">{sub}</div>
       </div>
       <div id="hint" className="cond">
-        <span className="desk">Scroll to walk · Drag to look around<br />Click a polaroid to step up to it</span>
+        <span className="desk">Cuộn chuột để đi · Kéo để nhìn quanh<br />Bấm vào ảnh để đến gần</span>
         <span className="touch">Vuốt lên/xuống: đi tới/lùi<br />Vuốt ngang: nhìn quanh · Chạm ảnh để xem</span>
       </div>
     </>
